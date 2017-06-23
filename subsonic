@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# PROVIDE: subsonic
+# REQUIRE: LOGIN DAEMON NETWORKING
+# KEYWORD: shutdown
+#
+# To enable subsonic, add this line to your /etc/rc.conf:
+#
+# subsonic_enable="YES"
+#
+# And optionally these line:
+#
+# subsonic_user="username" # Default is "root"
+# subsonic_bin="/path/to/subsonic.sh" # Default is "/usr/local/sbin/subsonic.sh"
+ 
+. /etc/rc.subr
+ 
+name="subsonic"
+rcvar="subsonic_enable"
+ 
+load_rc_config $name
+ 
+required_files=$subsonic_bin
+ 
+: ${subsonic_enable="NO"}
+: ${subsonic_user="root"}
+: ${subsonic_bin="/usr/local/sbin/subsonic.sh"}
+ 
+command=$subsonic_bin
+ 
+run_rc_command "$1"
