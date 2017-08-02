@@ -4,7 +4,8 @@ Subsonic
 ToC
 --------
 + [Add jail](#addjail)
-+ [Add user sonic](#usersonic)
++ [Add user sonic in NAS](#usersonicnas)
++ [Add user sonic in jail](#usersonicjail)
 + [Add storage](#addstorage)
 + [Install Subsonic](#installsubsonic)
 + [Install SSL](#ssl)
@@ -17,10 +18,6 @@ ToC
 Notes
 -----
 
-```
-jls
-jexec 18 tcsh
-```
 
 
 Inside the jail
@@ -39,57 +36,74 @@ https://forums.freenas.org/index.php?threads/how-to-install-subsonic-4-8-on-free
 **Add jail<a name="#addjail">**
 
 Using WebGUI
-Click add Jail and give it a name "Subsonic" and then hit the advanced tab and and un-check "Vanilla" (make sure you have standard selected and VIMAGE ticked, probably a good idea to put in gateway too) and click ok.
+Click add Jail and give it a name "Subsonic" and click ok.
+
+
+**Add user sonic in NAS<a name="#usersonicnas">**
+
+Using WebGUI
+Shell: nologin
+Add emby to the group
 
 
 
-**Add user sonic<a name="#usersonic">**
+
+**Add user sonic in jail<a name="#usersonicjail">**
 
 ```
+jls
+jexec 18 tcsh
 adduser
 ```
 Username: sonic
 Full name: Sonic
-Uid: (1011)
+Uid: (1014)
 Login group: (default)
 Login group is sonic. Invite sonic into other groups:
 Login class: (default)
 Shell: tcsh
 Home directory: (default)
 Home directory permissions: (default)
-Use password-based authentication: no
+Use password-based authentication: (default)
 Lock out the account after creation: (default)
 OK?: yes
 Add another user?: no
 
 
 ```
-mkdir /music
-chown -R sonic:sonic /music
 su - sonic
-mkdir /home/sonic/install
+mkdir music
+mkdir install
 ```
 
 **Add storage<a name="#addstorage">**
 
-Add storage to /music in the NAS gui
+Add storage to /music in the NAS gui jail section.
 
 
 **Install Subsonic<a name="#installsubsonic">**
 
 
 ```
-su - root
+exit
 pkg update && pkg upgrade -y
 pkg search openjdk
-pkg install openjdk-xxxx
-pkg install xtrans xproto xextproto javavmwrapper lame flac
+pkg install openjdk8-jre-8.131.11
+pkg install xtrans xproto xextproto javavmwrapper flac
 portsnap fetch extract
 portsnap fetch update
+cd /usr/ports/audio/lame/ && make install clean
 cd /usr/ports/multimedia/ffmpeg
 make
 ```
----- Important ---- At this point you will be presented a list of options, make sure you an X in the LAME section. I also turn on AAC support (top).
+
+X in:
+
+FDK_AAC
+LAME
+
+Rest default
+
 ```
 make install clean
 mkdir -p /home/sonic/subsonic/transcode
@@ -217,6 +231,8 @@ https://forums.freenas.org/index.php?threads/how-to-install-subsonic-4-8-on-free
 
 ```
 portsnap fetch extract
+portsnap fetch update
+cd /usr/ports/ports-mgmt/portupgrade/ && make install clean
 portsnap fetch update
 cd /usr/ports/ports-mgmt/pkg
 make install
