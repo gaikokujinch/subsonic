@@ -111,12 +111,12 @@ mkdir /home/sonic/subsonic/standalone
 cp /usr/local/bin/lame /home/sonic/subsonic/transcode/
 cp /usr/local/bin/flac /home/sonic/subsonic/transcode/
 ln /usr/local/bin/ffmpeg /home/sonic/subsonic/transcode/ffmpeg
-chown -R subsonic:subsonic /home/sonic/subsonic
+chown -R sonic:sonic /home/sonic/subsonic
 su - sonic
 cd /tmp
 
 
-wget https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-6.1.1-standalone.tar.gz
+fetch https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-6.1.1-standalone.tar.gz
 tar xvzf /tmp/subsonic-6.1.1-standalone.tar.gz -C /home/sonic/subsonic/standalone
 ```
 Edit File /home/sonic/subsonic/standalone/subsonic.sh and change these lines to match your setup:
@@ -135,13 +135,14 @@ Only if pid appears
 kill (pid)
 ```
 ```
-nano /usr/local/etc/rc.d/subsonic
+exit
+ee /usr/local/etc/rc.d/subsonic
 ```
-Copy contents of subsonic into that file.
+Copy contents of subsonic file into that file.
 
 ```
 chmod ug+x /usr/local/etc/rc.d/subsonic
-nano /etc/rc.conf
+ee /etc/rc.conf
 ```
 Add lines from rc.conf to that file.
 
